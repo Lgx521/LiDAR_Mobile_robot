@@ -21,7 +21,7 @@ async def main():
 
     print(f"连接到设备: {target_device.name}, 地址: {target_device.address}")
 
-    async with BleakClient(target_device) as client:  # ← 改这里
+    async with BleakClient(target_device.address) as client:
         if not client.is_connected:
             print("连接失败！")
             return

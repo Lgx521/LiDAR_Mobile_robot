@@ -21,7 +21,7 @@ _UART_RX = ( _UART_RX_UUID, ubluetooth.FLAG_WRITE,)
 _UART_SERVICE = ( _UART_SERVICE_UUID, (_UART_TX, _UART_RX,), )
 
 class BLEUART:
-    def __init__(self, ble, name="ESP32_UART"):
+    def __init__(self, ble, name="ESP32"):
         self._ble = ble
         self._ble.active(True)
         self._ble.irq(self._irq)
@@ -47,9 +47,11 @@ class BLEUART:
                 received = self._ble.gatts_read(self._handle_rx)
                 print("RX:", received)
 
-    def send(self, data):
-        for conn_handle in self._connections:
-            self._ble.gatts_notify(conn_handle, self._handle_tx, data)
+    def send(self, data, chunk_size=64):
+        for i in range(0, len(data), chunk_size):
+            chunk = data[i:i+chunk_size]
+            for conn_handle in self._connections:
+                self._ble.gatts_notify(conn_handle, self._handle_tx, chunk)
 
     def _advertise_payload(self, name=None):
         payload = bytearray()
@@ -66,10 +68,10 @@ ble = ubluetooth.BLE()
 uart_ble = BLEUART(ble)
 
 # 初始化硬件串口
-uart = UART(1, baudrate=9600, tx=17, rx=16)  # 根据自己的硬件改 GPIO
+uart = UART(1, baudrate=115200, tx=17, rx=16)  # 根据自己的硬件改 GPIO
 
 # 循环读取 UART 数据并发送到 BLE
 while True:
     if uart.any():
-        data = uart.read()
+        data = uart.readline()
         uart_ble.send(data)
