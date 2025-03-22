@@ -1,15 +1,23 @@
 # LiDAR Mobile Robot
 
 ## Communication between ESP32 and Laptop
-### version 1.0
-Only achieved the serial penetration, single side communication.
-Function of this repo:
+
+**Function of this repo**:
 - Realize the wireless communication between a Mobile robot and a laptop running Ubuntu 20.04
-Pipeline:
-- 
 
+---
+### version 1.0
+**Limitation**:
+Only achieved the serial penetration, single side communication.
 
-### Get started
+**Pipeline**:
+- Sensor send data to ESP32 via uart serial
+- ESP32 send these data to WiFi
+- Laptop receive these data via WiFi
+- Transmit these data via virtual serial
+- Resultantly ROS sensor driver can receive these data via the virtual serial
+
+**Get started**:
 Notice:
 - Ensure the laptop and esp32 are connected to same Wi-Fi.
 - `wifi.py` is the MicroPython script running on ESP32.
