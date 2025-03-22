@@ -5,7 +5,7 @@ import socket
 import struct
 
 TCP_IP = '192.168.3.109'  # ESP32的IP
-TCP_IP = '172.20.10.3'  # ESP32的IP
+TCP_IP = '192.168.137.252'  # ESP32的IP
 
 TCP_PORT = 1234
 
