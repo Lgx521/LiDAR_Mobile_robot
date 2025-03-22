@@ -18,6 +18,11 @@ wlan.active(True)
 # 初始化串口 (UART1: TX=GPIO4, RX=GPIO5)
 uart = UART(1, baudrate=115200, rx=Pin(16), tx=Pin(17))
 
+# 这是接受计算机发来的控制数据并发送给底盘的串口
+# 预计板载与PCB上
+uart_out = UART()
+
+
 def connect_wifi():
     print("Connecting to WiFi...")
     if not wlan.isconnected():
@@ -51,7 +56,7 @@ def main():
             
             # 检查客户端连接状态
             if client_sock:
-                # 读取串口数据并转发
+                # 读取LiDAR串口数据并转发
                 if uart.any():
                     data = uart.read(BUFFER_SIZE)
                     try:
@@ -61,6 +66,14 @@ def main():
                         client_sock.close()
                         client_sock = None
                         continue
+                
+                # 读取数据
+                try:
+                    data = client_sock.recv(BUFFER_SIZE)
+                    if data:
+                        uart_out.write(data)
+                except:
+                    pass
 
             
         except OSError as e:
