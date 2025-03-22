@@ -34,6 +34,6 @@ Steps to implement, in `Ubuntu20.04`:
   - Implement sudo access: run in another terminal: `sudo chmod 777 /dev/ttyVIRT*`
 - Run `wifi_receive_virtual_serial.py` on laptop
   - Remember to change `TCP_IP` variable as the noted IP address of you esp32.
-  - Remember to change `virtual_com` definition in `__init__()` function as your virtual serial name(`'/dev/ttyVIRT0'`)
+  - Remember to change `virtual_com` signature in `__init__()` function as your virtual serial name(`'/dev/ttyVIRT0'`)
 - You can examine the output by cancel the code comments in `run()` function.
 - Read the virtual serial data in the other virtual serial which is created in pair(`'/dev/ttyVIRT1'`)
