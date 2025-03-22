@@ -4,8 +4,8 @@ from machine import UART, Pin
 import time
 
 # WiFi 配置
-SSID = 'HUAWEI-SUST412'
-PASSWORD = '412412412'
+SSID = '甘圣哲的iPhone'
+PASSWORD = 'gan123456'
 
 # 网络参数
 PORT = 1234

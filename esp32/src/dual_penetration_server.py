@@ -29,19 +29,18 @@ print("Client connected from:", addr)
 # 数据透传：串口 ↔ TCP客户端
 while True:
     # 从串口读取数据并发送给客户端
-#     data = b'0x550x2c'
-#     client.send(data)
-
-    # if uart.any():
-    #     data = uart.read(1024)
-    #     client.send(data)
-    #     print("Sent to client:", data)
-    
-    # 从客户端接收数据并写入串口（双向透传可选）
-    try:
-        data = client.recv(1024)
-        if data:
-            # uart.write(data)
-            print(data)
-    except:
-        pass
+    data = b'0x550x2c'
+    client.send(data)
+#     if uart.any():
+#         data = uart.read(1024)
+#         client.send(data)
+#         print("Sent to client:", data)
+#     
+#     # 从客户端接收数据并写入串口（双向透传可选）
+#     try:
+#         data = client.recv(1024)
+#         if data:
+#             uart.write(data)
+#             print("Received from client:", data)
+    # except:
+    #     pass

@@ -30,6 +30,6 @@ while True:
         data = client.recv(1024)
         if data:
             sys.stdout.write(data)
-            print("Received from server:", data) # for test purpose
+            print(data) # for test purpose
     except:
         pass
