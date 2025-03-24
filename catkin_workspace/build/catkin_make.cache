@@ -1,0 +1,2 @@
+communication:communication_esp32_serial:ldlidar_sl_ros:vel_control_pkg:wpr_simulation
+-DCATKIN_DEVEL_PREFIX=/home/gansz/mobile_robot/catkin_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/gansz/mobile_robot/catkin_workspace/install -G Unix Makefiles

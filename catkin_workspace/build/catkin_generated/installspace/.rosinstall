@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/gansz/mobile_robot/catkin_workspace/install/setup.sh

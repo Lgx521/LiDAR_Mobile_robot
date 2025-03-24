@@ -1,0 +1,8 @@
+prefix=/home/gansz/mobile_robot/catkin_workspace/devel
+
+Name: communication
+Description: Description of communication
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

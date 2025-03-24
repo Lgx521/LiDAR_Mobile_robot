@@ -1,0 +1,8 @@
+prefix=/home/gansz/mobile_robot/catkin_workspace/install
+
+Name: ldlidar_stl_ros
+Description: Description of ldlidar_stl_ros
+Version: 3.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

@@ -1,0 +1,8 @@
+prefix=/home/gansz/mobile_robot/catkin_workspace/devel
+
+Name: vel_control_pkg
+Description: Description of vel_control_pkg
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
