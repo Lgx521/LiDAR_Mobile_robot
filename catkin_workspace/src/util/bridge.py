@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 '''
 Running on Laptop
-multiport wifi communication
+multiport wifi communication class
 '''
 
 from binascii import crc32
@@ -21,7 +22,7 @@ esp32_ip = '10.0.0.23'
 
 
 class VirtualSerialBridge:
-    def __init__(self, tcp_ip, tcp_port, virtual_com):
+    def __init__(self, tcp_ip, tcp_port, virtual_com=''):
         # self.ser = serial.Serial(virtual_com, baudrate=115200)
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((tcp_ip, tcp_port))
@@ -37,16 +38,5 @@ class VirtualSerialBridge:
                     ser.write(data)
 
     # 读取数据并发送，应该要接入ros
-    def run_t(self):
-        pass
-
-
-
-if __name__ == '__main__':
-    LiDAR = VirtualSerialBridge(esp32_ip, LIDAR_PORT, virt_com_LiDAR)
-    LiDAR.run_r()
-
-    Encoder = VirtualSerialBridge(esp32_ip, ENCODER_PORT, virt_com_Encoder)
-    Encoder.run_r()
-
-
+    def run_t(self, data):
+        self.sock.sendall(data)

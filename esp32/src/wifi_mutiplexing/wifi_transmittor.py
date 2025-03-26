@@ -6,8 +6,8 @@ import time
 import gc
 
 # ========== 硬件配置 ==========
-SSID = 'jiuri'
-PASSWORD = '123qwe123'
+SSID = 'Chuangkechejian'
+PASSWORD = 'chuangkechejianjian'
 
 # 通信端口
 PORTS = {
@@ -67,7 +67,7 @@ def connect_wifi():
 def safe_send(data, conn, max_retry=3):
     for _ in range(max_retry):
         try:
-            return conn.send(data)
+            return conn.sendall(data)
         except OSError as e:
             if e.args[0] == 23:  # 资源不可用
                 time.sleep_ms(50)
@@ -114,17 +114,18 @@ def service_thread(port_name, uart_name, mode):
                 # 发送模式（LiDAR/Encoder）
                 if mode == 'tx':
                     if UARTS[uart_name].any():
-                        data = UARTS[uart_name].read(512)
+                        data = UARTS[uart_name].read(1024)
                         if data:
-                            safe_send(data, client)
+#                             safe_send(data, client)
+                            client.sendall(data)
                 
                 # 接收模式（CMD）
                 elif mode == 'rx':
-                    data = safe_recv(client, 128)
+                    data = safe_recv(client, 512)
                     if data:
                         UARTS[uart_name].write(data)
                         
-                time.sleep_ms(10)
+#                 time.sleep_ms(10)
                 
         except OSError as e:
             print(f"{port_name} error({e.args[0]}): {e}")
@@ -160,4 +161,5 @@ if __name__ == '__main__':
         network.WLAN(network.STA_IF).disconnect()
         for port in PORTS.values():
             manager.remove_connection(port)
+
 
