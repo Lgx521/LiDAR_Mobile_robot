@@ -33,7 +33,7 @@ class VirtualSerialBridge:
         with serial.Serial(self.virtual_com, baudrate=115200) as ser:
             while True:
                 data = self.sock.recv(1024)
-                print(data.hex())
+                # print(data.hex())
                 if data:
                     ser.write(data)
 

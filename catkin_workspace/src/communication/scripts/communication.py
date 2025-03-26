@@ -13,8 +13,8 @@ if __name__ == '__main__':
     LiDAR = brg.VirtualSerialBridge(brg.esp32_ip, brg.LIDAR_PORT, brg.virt_com_LiDAR)
     LiDAR.run_r()
 
-    # Encoder = brg.VirtualSerialBridge(brg.esp32_ip, brg.ENCODER_PORT, brg.virt_com_Encoder)
-    # Encoder.run_r()
+    Encoder = brg.VirtualSerialBridge(brg.esp32_ip, brg.ENCODER_PORT, brg.virt_com_Encoder)
+    Encoder.run_r()
 
 
 
