@@ -18,8 +18,8 @@ PORTS = {
 
 # 串口配置（根据实际硬件调整）
 UARTS = {
-    'lidar': UART(1, baudrate=115200, rx=Pin(16), tx=Pin(17), timeout=50),
-    'mcu': UART(2, baudrate=115200, rx=Pin(25), tx=Pin(26), timeout=50)
+    'lidar': UART(1, baudrate=115200, rx=Pin(16), tx=Pin(17)),
+    'mcu': UART(2, baudrate=115200, rx=Pin(25), tx=Pin(26))
 }
 
 # ========== 资源管理 ==========
@@ -70,6 +70,7 @@ def safe_send(data, conn, max_retry=3):
             return conn.sendall(data)
         except OSError as e:
             if e.args[0] == 23:  # 资源不可用
+                print(e)
                 time.sleep_ms(50)
                 continue
             raise
@@ -96,7 +97,8 @@ def service_thread(port_name, uart_name, mode):
     
     # 创建TCP服务器
     sock = socket.socket()
-    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind(('0.0.0.0', port))
     sock.listen(1)
     
@@ -161,5 +163,6 @@ if __name__ == '__main__':
         network.WLAN(network.STA_IF).disconnect()
         for port in PORTS.values():
             manager.remove_connection(port)
+
 
 

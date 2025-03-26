@@ -8,6 +8,7 @@ import serial
 from serial.tools.list_ports import comports
 import socket
 import struct
+import _thread
 
 LIDAR_PORT = 10001
 ENCODER_PORT = 10003
@@ -32,7 +33,7 @@ class VirtualSerialBridge:
         with serial.Serial(self.virtual_com, baudrate=115200) as ser:
             while True:
                 data = self.sock.recv(1024)
-                print(data.hex())
+                # print(data.hex())
                 if data:
                     ser.write(data)
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
     LiDAR = VirtualSerialBridge(esp32_ip, LIDAR_PORT, virt_com_LiDAR)
     LiDAR.run_r()
 
-    Encoder = VirtualSerialBridge(esp32_ip, ENCODER_PORT, virt_com_Encoder)
-    Encoder.run_r()
+    # Encoder = VirtualSerialBridge(esp32_ip, ENCODER_PORT, virt_com_Encoder)
+    # Encoder.run_r()
 
 
