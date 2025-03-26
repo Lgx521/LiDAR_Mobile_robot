@@ -18,8 +18,8 @@ PORTS = {
 
 # 串口配置（根据实际硬件调整）
 UARTS = {
-    'lidar': UART(2, baudrate=115200, rx=Pin(16), tx=Pin(17), timeout=50),
-    'mcu': UART(1, baudrate=115200, rx=Pin(3), tx=Pin(1), timeout=50)
+    'lidar': UART(1, baudrate=115200, rx=Pin(16), tx=Pin(17), timeout=50),
+    'mcu': UART(2, baudrate=115200, rx=Pin(25), tx=Pin(26), timeout=50)
 }
 
 # ========== 资源管理 ==========
@@ -160,3 +160,4 @@ if __name__ == '__main__':
         network.WLAN(network.STA_IF).disconnect()
         for port in PORTS.values():
             manager.remove_connection(port)
+

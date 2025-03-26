@@ -40,9 +40,9 @@ class RobotSerialControl:
     def build_velocity_frame(self, vx, vy, vz):
         """构建符合协议的数据帧"""
         # 限制速度范围(short类型范围)
-        vx = max(min(int(vx * self.scale_factor), 16383), -16384)
-        vy = max(min(int(vy * self.scale_factor), 16383), -16384)
-        vz = max(min(int(vz * self.scale_factor), 16383), -16384)
+        vx = max(min(int(vx * self.scale_factor), 32767), -32768)
+        vy = max(min(int(vy * self.scale_factor), 32767), -32768)
+        vz = max(min(int(vz * self.scale_factor), 32767), -32768)
 
         # 协议帧结构
         frame = bytearray()
@@ -50,10 +50,10 @@ class RobotSerialControl:
         frame.append(0x7B)
         # 预留位 (2 bytes)
         frame.extend([0x00, 0x00])
-        # 三轴速度 (每个轴2 bytes，小端字节序)
-        frame.extend(struct.pack('<h', vx))  # X轴
-        frame.extend(struct.pack('<h', vy))  # Y轴
-        frame.extend(struct.pack('<h', vz))  # Z轴
+        # 三轴速度 (每个轴2 bytes，大端字节序)
+        frame.extend(struct.pack('>h', vx))  # X轴
+        frame.extend(struct.pack('>h', vy))  # Y轴
+        frame.extend(struct.pack('>h', vz))  # Z轴
         # 校验位 (异或校验)
         checksum = frame[0]
         for b in frame[1:]:  # 从预留位开始计算
@@ -87,8 +87,7 @@ class RobotSerialControl:
         if (time.time() - self.last_cmd_time) > self.timeout_threshold:
             stop_frame = self.build_velocity_frame(0, 0, 0)
             try:
-                # self.ser.write(stop_frame)
-                pass
+                self.ser.write(stop_frame)
                 # rospy.logwarn("Velocity command timeout, sent stop command")
             except Exception as e:
                 rospy.logerr(f"Failed to send stop: {e}")

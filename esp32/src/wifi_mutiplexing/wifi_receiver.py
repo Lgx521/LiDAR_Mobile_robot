@@ -19,18 +19,6 @@ virt_com_Encoder = '/dev/ttyVIRT2'
 esp32_ip = '192.168.137.182'
 
 
-# # LiDAR数据接收
-# lidar_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# lidar_sock.connect((esp32_ip, LIDAR_PORT))
-
-# # 编码器数据接收
-# encoder_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# encoder_sock.connect((esp32_ip, ENCODER_PORT))
-
-# # 速度指令发送
-# cmd_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# cmd_sock.connect((esp32_ip, CMD_PORT))
-
 
 class VirtualSerialBridge:
     def __init__(self, tcp_ip, tcp_port, virtual_com):
