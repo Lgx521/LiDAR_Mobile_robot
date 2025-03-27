@@ -7,6 +7,14 @@ from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import BatteryState
 
+'''
+In this file, the cmd_vel is published, 
+I think the accessiablity is doubted, because I think interference will occur 
+between the real velocity control and the feedback data.
+Thus this file is under pending, waiting for further validation.
+'''
+
+
 class SerialParser:
     def __init__(self):
         rospy.init_node('stm32_serial_parser', anonymous=True)

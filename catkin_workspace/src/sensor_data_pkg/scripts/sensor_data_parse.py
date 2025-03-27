@@ -8,6 +8,13 @@ from sensor_msgs.msg import Imu, BatteryState
 from geometry_msgs.msg import Twist, Vector3, Pose, Quaternion
 from tf.transformations import quaternion_from_euler
 
+'''
+In this file, the Twist data type is not published
+Only publish Odometry, tf and batteryState data.
+This file is still under pending, waiting for further validation on the real robot.
+'''
+
+
 class Stm32SerialNode:
     def __init__(self):
         rospy.init_node('stm32_serial_node')
