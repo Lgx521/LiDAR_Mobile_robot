@@ -47,7 +47,7 @@ Steps to implement, in `Ubuntu20.04`:
 **Limitation**:  
 Still in prograss. The basic communication logic is finished, using the multiple-port strategy.  
 
-**What's new**? & **Pipeline**:  
+**What's new?** & **Pipeline**:  
 - Use different port to communicate in three way --- LiDAR tx, CMD rx and Encoder tx.  
 - Wrote a python package to utililze the Wi-Fi reciever class, to be easily instantiated both in `vel-cmd` node and LiDAR receiver.  
 - Created the ROS node of the `vel_cmd` subscriber  
