@@ -1,182 +1,131 @@
 #!/usr/bin/env python3
 import rospy
-import struct
 import serial
+import struct
+import numpy as np
 from nav_msgs.msg import Odometry
-from geometry_msgs.msg import Twist
-from std_msgs.msg import Float32, Header
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, BatteryState
+from geometry_msgs.msg import Twist, Vector3, Pose, Quaternion
+from tf.transformations import quaternion_from_euler
 
-class Stm32OdomNode:
+class Stm32SerialNode:
     def __init__(self):
-        rospy.init_node('stm32_odom_node')
+        rospy.init_node('stm32_serial_node')
         
-        # 协议参数（根据表格6-2-1定义）
-        self.PACKET_CONFIG = {
-            'header': 0x7B,
-            'footer': 0x7D,
-            'total_length': 34,  # 1+1+(17 * 2)+1+1=34
-            'scale_factor': 1000.0,  # 根据表格说明的浮点放大倍数
-            'fields': [
-                ('frame_header', 0, 'B'),    # 数组1 Uint8
-                ('flag_store', 1, 'B'),      # 数组2 Uint8
-                ('robot_vx', 2, 'h'),        # 数组3 short
-                ('robot_vy', 4, 'h'),        # 数组4 short
-                ('robot_vz', 6, 'h'),        # 数组5 short
-                ('accel_x', 8, 'h'),         # 数组6 short
-                ('accel_y', 10, 'h'),        # 数组7 short
-                ('accel_z', 12, 'h'),        # 数组8 short
-                ('gyro_x', 22, 'h'),         # 数组13 short
-                ('gyro_y', 24, 'h'),         # 数组14 short
-                ('gyro_z', 26, 'h'),         # 数组15 short
-                ('battery_voltage', 28, 'h'),# 数组17 short
-                ('checksum', 32, 'B'),       # 数组18 Uint8
-                ('frame_end', 33, 'B')       # 数组20 Uint8
-            ]
-        }
-
-        # 初始化ROS发布器
+        # 初始化发布器
+        self.imu_pub = rospy.Publisher('/imu', Imu, queue_size=10)
         self.odom_pub = rospy.Publisher('/odom', Odometry, queue_size=10)
-        self.twist_pub = rospy.Publisher('/current_velocity', Twist, queue_size=10)
-        self.battery_pub = rospy.Publisher('/battery_voltage', Float32, queue_size=10)
-        self.imu_pub = rospy.Publisher('/imu/data', Imu, queue_size=10)
+        self.battery_pub = rospy.Publisher('/battery', BatteryState, queue_size=10)
 
-        # 串口配置（根据实际设备修改）
-        self.serial_port = serial.Serial(
-            port='/dev/ttyACM0',
+        # 串口配置
+        self.ser = serial.Serial(
+            port='/dev/ttyVIRT3',
             baudrate=115200,
-            bytesize=serial.EIGHTBITS,
-            parity=serial.PARITY_NONE,
-            stopbits=serial.STOPBITS_ONE,
             timeout=0.1
         )
+        self.buffer = bytearray()
+        self.packet_length = 24  # 总数据包长度
 
-        # 数据缓冲区
-        self.raw_buffer = bytearray()
+        # Odom初始化
+        self.odom_pose = Pose()
+        self.odom_pose.orientation = Quaternion(*quaternion_from_euler(0, 0, 0))
+        self.odom_twist = Twist()
 
-    def convert_value(self, raw, field_type):
-        """根据字段类型转换数据"""
-        scale = self.PACKET_CONFIG['scale_factor']
-        if field_type == 'h':  # short类型
-            return struct.unpack('<h', raw)[0] / scale
-        return raw[0]  # uint8类型
+    def parse_short(self, data):
+        """转换short到浮点数（协议规定/1000）"""
+        return struct.unpack('>h', data)[0] / 1000.0
 
-    def validate_packet(self, packet):
-        """执行协议验证"""
-        # 帧头帧尾验证
-        if packet[0] != self.PACKET_CONFIG['header'] or packet[-1] != self.PACKET_CONFIG['footer']:
+    def verify_packet(self, packet):
+        """异或校验（包含帧头）"""
+        if len(packet) != self.packet_length:
             return False
-        
-        # 校验和验证（数组1到数组17的累加和）
-        checksum = sum(packet[1:-2]) & 0xFF
-        return checksum == packet[-2]
+        if packet[0] != 0x7B or packet[-1] != 0x7D:
+            return False
+            
+        calculated_xor = 0
+        for b in packet[:-2]:  # 包含帧头，排除校验位和帧尾
+            calculated_xor ^= b
+        return calculated_xor == packet[-2]
 
     def process_packet(self, packet):
         """处理有效数据包"""
         try:
-            # 解析数据字段
-            data = {}
-            for name, pos, dtype in self.PACKET_CONFIG['fields']:
-                if dtype == 'B':
-                    data[name] = packet[pos]
-                elif dtype == 'h':
-                    data[name] = struct.unpack('<h', packet[pos:pos+2])[0]
+            # 解析IMU数据
+            imu = Imu()
+            imu.header.stamp = rospy.Time.now()
+            imu.header.frame_id = "imu_link"
             
-            # 转换为实际物理值
-            scale = self.PACKET_CONFIG['scale_factor']
-            odom_data = {
-                'vx': data['robot_vx'] / scale,
-                'vy': data['robot_vy'] / scale,
-                'vz': data['robot_vz'] / scale,
-                'accel': [data['accel_x']/scale, data['accel_y']/scale, data['accel_z']/scale],
-                'gyro': [data['gyro_x']/scale, data['gyro_y']/scale, data['gyro_z']/scale],
-                'battery': data['battery_voltage'] / scale
-            }
+            # 加速度（数组号6-8）
+            imu.linear_acceleration.x = self.parse_short(packet[8:10])   # 数组6
+            imu.linear_acceleration.y = self.parse_short(packet[10:12])  # 数组7
+            imu.linear_acceleration.z = self.parse_short(packet[12:14])  # 数组8
             
-            # 发布ROS消息
-            self.publish_messages(odom_data)
+            # 角速度（数组9-11）
+            imu.angular_velocity.x = self.parse_short(packet[14:16])      # 数组9
+            imu.angular_velocity.y = self.parse_short(packet[16:18])     # 数组10
+            imu.angular_velocity.z = self.parse_short(packet[18:20])     # 数组11
+
+            # 解析里程计数据（数组3-5）
+            odom = Odometry()
+            odom.header.stamp = imu.header.stamp
+            odom.header.frame_id = "odom"
+            odom.child_frame_id = "base_link"
+            
+            # 速度信息
+            odom.twist.twist.linear.x = self.parse_short(packet[2:4])    # 数组3
+            odom.twist.twist.linear.y = self.parse_short(packet[4:6])    # 数组4
+            odom.twist.twist.linear.z = self.parse_short(packet[6:8])    # 数组5
+            
+            # 位置信息（需积分实现，此处初始化）
+            odom.pose.pose = self.odom_pose
+
+            # 电池电压（数组12）
+            battery = BatteryState()
+            battery.header.stamp = imu.header.stamp
+            battery.voltage = self.parse_short(packet[20:22])            # 数组12
+
+            return imu, odom, battery
 
         except Exception as e:
-            rospy.logerr(f"Data processing error: {str(e)}")
-
-    def publish_messages(self, data):
-        """发布所有ROS话题"""
-        timestamp = rospy.Time.now()
-        
-        # 里程计消息
-        odom = Odometry()
-        odom.header = Header(frame_id="odom", stamp=timestamp)
-        odom.child_frame_id = "base_link"
-        odom.twist.twist.linear.x = data['vx']
-        odom.twist.twist.linear.y = data['vy']
-        odom.twist.twist.angular.z = data['vz']
-        self.odom_pub.publish(odom)
-        
-        # 实时速度
-        twist = Twist()
-        twist.linear.x = data['vx']
-        twist.linear.y = data['vy']
-        twist.angular.z = data['vz']
-        self.twist_pub.publish(twist)
-        
-        # IMU数据
-        imu = Imu()
-        imu.header = Header(frame_id="imu_link", stamp=timestamp)
-        imu.linear_acceleration.x = data['accel'][0]
-        imu.linear_acceleration.y = data['accel'][1]
-        imu.linear_acceleration.z = data['accel'][2]
-        imu.angular_velocity.x = data['gyro'][0]
-        imu.angular_velocity.y = data['gyro'][1]
-        imu.angular_velocity.z = data['gyro'][2]
-        self.imu_pub.publish(imu)
-        
-        # 电池电压
-        self.battery_pub.publish(Float32(data['battery']))
+            rospy.logerr("数据处理错误: %s", str(e))
+            return None
 
     def run(self):
-        """主循环"""
+        rate = rospy.Rate(20)  # 20Hz发布频率
         while not rospy.is_shutdown():
             # 读取串口数据
-            try:
-                data = self.serial_port.read(self.serial_port.in_waiting or 1)
-                if data:
-                    self.raw_buffer.extend(data)
+            data = self.ser.read(self.ser.in_waiting or 1)
+            if data:
+                self.buffer.extend(data)
+                
+                # 处理完整数据包
+                while len(self.buffer) >= self.packet_length:
+                    start = self.buffer.find(b'\x7b')
+                    if start < 0:
+                        self.buffer.clear()
+                        break
                     
-                    # 处理完整数据包
-                    while True:
-                        # 查找帧头位置
-                        start = self.raw_buffer.find(bytes([self.PACKET_CONFIG['header']]))
-                        if start == -1:
-                            self.raw_buffer.clear()
-                            break
-                        
-                        # 检查最小包长度
-                        if len(self.raw_buffer) - start < self.PACKET_CONFIG['total_length']:
-                            self.raw_buffer = self.raw_buffer[start:]
-                            break
-                        
-                        # 提取候选数据包
-                        end = start + self.PACKET_CONFIG['total_length']
-                        candidate = self.raw_buffer[start:end]
-                        
-                        # 协议验证
-                        if self.validate_packet(candidate):
-                            rospy.logwarn('true data recieved')
-                            self.process_packet(candidate)
-                            self.raw_buffer = self.raw_buffer[end:]
-                        else:
-                            # 无效数据包，跳过当前字节
-                            self.raw_buffer = self.raw_buffer[start+1:]
-                            rospy.logwarn('wrong data recieved')
-            except serial.SerialException as e:
-                rospy.logerr(f"Serial communication error: {str(e)}")
-                break
-
-        self.serial_port.close()
+                    end = start + self.packet_length
+                    if len(self.buffer) < end:
+                        break
+                    
+                    packet = self.buffer[start:end]
+                    self.buffer = self.buffer[end:]
+                    
+                    if self.verify_packet(packet):
+                        result = self.process_packet(packet)
+                        if result:
+                            self.imu_pub.publish(result[0])
+                            self.odom_pub.publish(result[1])
+                            self.battery_pub.publish(result[2])
+                    else:
+                        rospy.logwarn("无效数据包，已丢弃")
+            
+            rate.sleep()
 
 if __name__ == '__main__':
-    node = Stm32OdomNode()
     try:
+        node = Stm32SerialNode()
         node.run()
     except rospy.ROSInterruptException:
-        node.serial_port.close()
+        node.ser.close()
