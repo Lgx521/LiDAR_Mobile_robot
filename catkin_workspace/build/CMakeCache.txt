@@ -1083,6 +1083,12 @@ rostime_DIR:PATH=/opt/ros/noetic/share/rostime/cmake
 //The directory containing a CMake configuration file for sdformat9.
 sdformat9_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/sdformat9
 
+//Value Computed by CMake
+sensor_data_pkg_BINARY_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/build/sensor_data_pkg
+
+//Value Computed by CMake
+sensor_data_pkg_SOURCE_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/src/sensor_data_pkg
+
 //The directory containing a CMake configuration file for sensor_msgs.
 sensor_msgs_DIR:PATH=/opt/ros/noetic/share/sensor_msgs/cmake
 

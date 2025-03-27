@@ -16,9 +16,9 @@ def build_velocity_frame(vx, vy, vz):
         frame.extend([0x00])
         frame.extend([0x00])
         # 三轴速度 (每个轴2 bytes，小端字节序)
-        frame.extend(struct.pack('<h', vx))  # X轴
-        frame.extend(struct.pack('<h', vy))  # Y轴
-        frame.extend(struct.pack('<h', vz))  # Z轴
+        frame.extend(struct.pack('>h', vx))  # X轴
+        frame.extend(struct.pack('>h', vy))  # Y轴
+        frame.extend(struct.pack('>h', vz))  # Z轴
         # 校验位 (异或校验)
         checksum = 0
         for i in range(len(frame)):  # 从预留位开始计算
@@ -32,6 +32,6 @@ def build_velocity_frame(vx, vy, vz):
         return frame
 
 
-data = build_velocity_frame(0.2,0,0.2)
+data = build_velocity_frame(0.5,0,0)
 print(len(data))
 print(data.hex())
