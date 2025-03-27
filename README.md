@@ -1,9 +1,12 @@
 # LiDAR Mobile Robot
 
-## Communication between ESP32 and Laptop
+The course project of `EE202-17L` - Digital Circuits Laboratory.
+
+## Communication between ESP32, Mobile robot base and Laptop
 
 **Function of this repo**:  
 - Realize the wireless communication between a Mobile robot and a laptop running Ubuntu 20.04
+- In the ROS workspace, a basic LiDAR-slam algorithm will be implemented.
 
 ---
 ### version 1.0
@@ -85,6 +88,6 @@ Check data with RViz:
   - Run the LiDAR's drive: `roslaunch ldlidar_sl_ros ld14.launch`  
   - Open RViz `rviz`  
   - In RViz, change the base to `Laser_base`  
-  - Add `LaserScan`, choose topic `/scan`.  
+  - Add `LaserScan`, choose topic `/scan`   
   - Finished.  
 
