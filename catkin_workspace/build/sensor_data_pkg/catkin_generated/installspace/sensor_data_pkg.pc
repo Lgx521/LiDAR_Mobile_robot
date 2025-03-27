@@ -1,0 +1,8 @@
+prefix=/home/gansz/mobile_robot/catkin_workspace/install
+
+Name: sensor_data_pkg
+Description: Description of sensor_data_pkg
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
