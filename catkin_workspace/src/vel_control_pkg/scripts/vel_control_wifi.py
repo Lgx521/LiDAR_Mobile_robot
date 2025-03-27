@@ -14,9 +14,6 @@ import time
 from geometry_msgs.msg import Twist
 
 
-
-
-
 class RobotSerialControl:
     def __init__(self):
         # Wifi 桥接对象
