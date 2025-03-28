@@ -9,6 +9,7 @@ import serial
 from serial.tools.list_ports import comports
 import socket
 import struct
+import rospy
 
 LIDAR_PORT = 10001
 ENCODER_PORT = 10003
@@ -36,6 +37,8 @@ class VirtualSerialBridge:
                 # print(data.hex())
                 if data:
                     ser.write(data)
+                else:
+                    rospy.loginfo('no data')
 
     # 读取数据并发送，应该要接入ros
     def run_t(self, data):

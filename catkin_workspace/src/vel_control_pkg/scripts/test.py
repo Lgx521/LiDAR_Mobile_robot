@@ -35,3 +35,4 @@ def build_velocity_frame(vx, vy, vz):
 data = build_velocity_frame(0.5,0,0)
 print(len(data))
 print(data.hex())
+print(data)
