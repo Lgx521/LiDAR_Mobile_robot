@@ -11,6 +11,7 @@ from tf.transformations import quaternion_from_euler
 '''
 In this file, the Twist data type is not published
 Only publish Odometry, tf and batteryState data.
+This file has already passed static test.
 This file is still under pending, waiting for further validation on the real robot.
 '''
 
