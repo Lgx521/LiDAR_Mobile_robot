@@ -1,6 +1,8 @@
 # LiDAR Mobile Robot
 
-The course project of `EE202-17L` - Digital Circuits Laboratory.
+The course project of `EE202-17L` - Digital Circuits Laboratory.  
+***Lead Author:***  **Shengzhe GAN** (Communication, ROS and algorithm implementation)  
+***Collaborators:***  **Xuji WANG** (Hardware and embedded systems), **Xiaokun LIU** (Hardware), **Kairui XIAO** (Hardware)  
 
 ## Communication between ESP32, Mobile robot base and Laptop
 
@@ -8,7 +10,33 @@ The course project of `EE202-17L` - Digital Circuits Laboratory.
 - Realize the wireless communication between a Mobile robot and a laptop running Ubuntu 20.04
 - In the ROS workspace, a basic LiDAR-slam algorithm will be implemented.
 
+## Approach overview 
+
+**Hardware**  
+- A L150 DIFF Mobile Robot Base by Wheeltech Technology Co., LTD.  
+- LD14 2-D LiDAR.
+- ESP32-Wroom-32 dev board.
+- Laptop running ROS noetic.  
+
+**Strategy**  
+- Communication via multiport strategy to exchange LiDAR data, Base data and command data.
+- The command data is sent via Wi-Fi directly.
+- The recieved LiDAR and base data are pushed into two pair of virtual serial.
+- The ROS packages read these data via virtual serial.
+
+**Pipeline**  
+- LiDAR connect to ESP32 dev board via UART.
+- The car is embedded with ROS interface, connect to the ESP32 dev board via serial. A converter is used.
+- The ESP32 connect to local Wi-Fi which is same to the Laptop running ROS.
+- The ESP32 send LiDAR and base date via two port, receive command data via a third data.
+- The laptop runs four ros packages:  
+  - communication: Realize the LiDAR and base data reception.  
+  - vel_control_pkg: Realize the command data transmition.  
+  - sensor_data_parse: Realize the parse for the feedback base data, publish `\odom`, `\imu`amd `\battary` topics.  
+  - ldlidar_sl_ros: The official driver for the ld14 2-D LiDAR.  
+
 ---
+## Version Updates and Usage Guidance
 ### version 1.0
 **Limitation**:  
 Only achieved the serial penetration, single side communication.
