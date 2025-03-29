@@ -2,7 +2,7 @@
 
 The course project of `EE202-17L` - Digital Circuits Laboratory.  
 ***Lead Author:***  **Shengzhe GAN** (Communication, ROS and algorithm implementation)  
-***Collaborators:***  **Xuji WANG** (Hardware and embedded systems), **Xiaokun LIU** (Hardware), **Kairui XIAO** (Hardware)  
+***Collaborators:***  **Xujie WANG** (Hardware and embedded systems), **Xiaokun LIU** (Hardware), **Kairui XIAO** (Hardware)  
 
 ## Communication between ESP32, Mobile robot base and Laptop
 
