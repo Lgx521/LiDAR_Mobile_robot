@@ -29,11 +29,12 @@ The course project of `EE202-17L` - Digital Circuits Laboratory.
 - The car is embedded with ROS interface, connect to the ESP32 dev board via serial. A converter is used.
 - The ESP32 connect to local Wi-Fi which is same to the Laptop running ROS.
 - The ESP32 send LiDAR and base date via two port, receive command data via a third data.
-- The laptop runs four ros packages:  
+- The laptop runs 5 ros packages:  
   - communication: Realize the LiDAR and base data reception.  
   - vel_control_pkg: Realize the command data transmition.  
   - sensor_data_parse: Realize the parse for the feedback base data, publish `\odom`, `\imu`amd `\battary` topics.  
-  - ldlidar_sl_ros: The official driver for the ld14 2-D LiDAR.  
+  - ldlidar_sl_ros: The official driver for the ld14 2-D LiDAR.
+  - slam_and_motion_control_pkg: The slam and ego-motion planning package, is the core algorithm of this project.
 
 ---
 ## Version Updates and Usage Guidance
