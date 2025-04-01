@@ -120,3 +120,16 @@ Check data with RViz:
   - Add `LaserScan`, choose topic `/scan`   
   - Finished.  
 
+---
+### Version 2.1  
+
+**What's new?**:  
+- The serial communication between the base and ESP32 is finished
+
+**Get Started**:
+- Followed by `Version2.0`
+- UART serial communication: 
+  - Cable connection:  
+    - Base's pin `PA2`: Tx, connect to ESP32's Pin 25; 
+    - Base's pin `PA3`: Rx, connect to ESP32's Pin 26.
+
