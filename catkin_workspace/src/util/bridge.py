@@ -19,6 +19,7 @@ virt_com_LiDAR = '/dev/ttyVIRT0'
 virt_com_Encoder = '/dev/ttyVIRT2'
 
 esp32_ip = '10.0.0.23'
+esp32_ip = '172.20.10.3'
 
 
 
@@ -32,6 +33,7 @@ class VirtualSerialBridge:
     # 开始接收收到的数据并推入虚拟串口
     def run_r(self):
         with serial.Serial(self.virtual_com, baudrate=115200) as ser:
+            rospy.loginfo('Communication setup successfully')
             while True:
                 data = self.sock.recv(1024)
                 # print(data.hex())
