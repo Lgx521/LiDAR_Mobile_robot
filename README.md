@@ -133,3 +133,21 @@ Check data with RViz:
     - Base's pin `PA2`: Tx, connect to ESP32's Pin 25; 
     - Base's pin `PA3`: Rx, connect to ESP32's Pin 26.
 
+---
+### Version 2.2
+2025/5/11 Work
+- 修改了odom发布的数据
+- 在`vel_control_wifi.py`的launch文件里加上了tf变换，使得建图可以正常运行，使用的是`hector mapping`
+- 运行顺序：
+    1. 创建虚拟串口并设置sudo权限
+    2. 确保esp32运行并且与计算机处于同一网络环境下，ip地址在`/util/bridge.py`下替换为实际地址
+    3. 在终端中运行`rosrun communication communication.py`
+    4. 在终端中运行`rosrun vel_control_pkg vel_control_wifi.py`
+    5. 在终端中运行`rosrun sensor_data_pkg sensor data parse.py`
+    6. 如需要自己控制，启动`rqt_robot_steering`
+    7. 运行lidar的驱动
+    8. 可以在rviz中验证数据
+  ![Terminal View](./images/terminals.png)
+
+
+
