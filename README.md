@@ -148,6 +148,9 @@ Check data with RViz:
     7. 运行lidar的驱动
     8. 可以在rviz中验证数据
   ![Terminal View](./images/terminals.png)
-
+---
+### Board View
+![Board2D](./images/board2D.png)
+![Board3D](./images/board3D.png)
 
 
