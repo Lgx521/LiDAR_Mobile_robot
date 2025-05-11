@@ -7,7 +7,7 @@ import gc
 
 # ========== 硬件配置 ==========
 SSID = 'Chuangkechejian'
-PASSWORD = 'chuangkechejianjian'
+PASSWORD = 'chuangkechejianjian' 
 
 # 通信端口
 PORTS = {
