@@ -6,6 +6,7 @@
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
 subdirs("communication")
-subdirs("communication_esp32_serial")
+subdirs("launch_the_car")
 subdirs("ldlidar_sl_ros")
-subdirs("wpr_simulation")
+subdirs("sensor_data_pkg")
+subdirs("vel_control_pkg")

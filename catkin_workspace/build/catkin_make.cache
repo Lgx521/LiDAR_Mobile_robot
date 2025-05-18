@@ -1,2 +1,2 @@
-communication:ldlidar_sl_ros:sensor_data_pkg:vel_control_pkg:wpr_simulation
+communication:launch_the_car:ldlidar_sl_ros:sensor_data_pkg:vel_control_pkg
 -DCATKIN_DEVEL_PREFIX=/home/gansz/mobile_robot/catkin_workspace/devel -DCMAKE_INSTALL_PREFIX=/home/gansz/mobile_robot/catkin_workspace/install -G Unix Makefiles

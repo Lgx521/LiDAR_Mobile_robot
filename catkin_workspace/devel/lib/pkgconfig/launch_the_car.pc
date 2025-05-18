@@ -1,0 +1,8 @@
+prefix=/home/gansz/mobile_robot/catkin_workspace/devel
+
+Name: launch_the_car
+Description: Description of launch_the_car
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

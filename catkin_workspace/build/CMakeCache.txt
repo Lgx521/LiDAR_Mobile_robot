@@ -940,6 +940,12 @@ jsoncpp_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/jsoncpp
 kdl_parser_DIR:PATH=/opt/ros/noetic/share/kdl_parser/cmake
 
 //Value Computed by CMake
+launch_the_car_BINARY_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/build/launch_the_car
+
+//Value Computed by CMake
+launch_the_car_SOURCE_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/src/launch_the_car
+
+//Value Computed by CMake
 ldlidar_sl_ros_BINARY_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/build/ldlidar_sl_ros
 
 //Value Computed by CMake
@@ -952,7 +958,7 @@ ldlidar_stl_ros_BINARY_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/buil
 ldlidar_stl_ros_SOURCE_DIR:STATIC=/home/gansz/mobile_robot/catkin_workspace/src/ldlidar_stl_ros
 
 //Path to a library.
-lib:FILEPATH=/usr/lib/liborocos-kdl.so
+lib:FILEPATH=/opt/ros/noetic/lib/libxmlrpcpp.so
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/noetic/share/message_filters/cmake
