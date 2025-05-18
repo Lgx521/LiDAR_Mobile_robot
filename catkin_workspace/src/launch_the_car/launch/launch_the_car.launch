@@ -5,11 +5,15 @@
     <node pkg="sensor_data_parse" type="sensor_data_parse.py"/>
     <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"/>
     <node pkg="hector_mapping" type="hector_mapping"/>
-    <!---node pkg="rviz"
+
+    <!--
+    <node pkg="rviz"
           type="rviz"
           name="overall"
           args="-d ../rviz/overall.rviz"
           required="false" /> 
+    -->
+
 
 
 </launch>
