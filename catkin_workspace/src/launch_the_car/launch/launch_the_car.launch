@@ -1,0 +1,10 @@
+<launch>
+
+    <node pkg="communication" type="communication.py"/>
+    <node pkg="vel_control_pkg" type="vel_control_wifi.py"/>
+    <node pkg="sensor_data_parse" type="sensor_data_parse.py"/>
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"/>
+    <node pkg="hector_mapping" type="hector_mapping"/>
+
+
+</launch>
