@@ -1,10 +1,10 @@
 <launch>
 
-    <node pkg="communication" type="communication.py"/>
-    <node pkg="vel_control_pkg" type="vel_control_wifi.py"/>
-    <node pkg="sensor_data_parse" type="sensor_data_parse.py"/>
-    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"/>
-    <node pkg="hector_mapping" type="hector_mapping"/>
+    <node pkg="communication" type="communication.py" name="comm"/>
+    <node pkg="vel_control_pkg" type="vel_control_wifi.py" name="vel_ctrl"/>
+    <node pkg="sensor_data_parse" type="sensor_data_parse.py" name="sensor"/>
+    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="command_palatte"/>
+    <node pkg="hector_mapping" type="hector_mapping" name="map"/>
 
     <!--
     <node pkg="rviz"
