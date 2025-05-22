@@ -98,9 +98,10 @@ if __name__ == '__main__':
 
     try:
         _ = rospy.wait_for_message(topic_to_wait_for, message_type, timeout=timeout)
+        rospy.loginfo("Velocity message well received, vel command launch...")
         node = RobotSerialControl()
         rospy.spin()
-        
+
     except rospy.ROSException as e:
         rospy.logerr("Timeout or ROS error while waiting for message on %s: %s", topic_to_wait_for, e)
         rospy.logerr("Node will not proceed with main logic.")
