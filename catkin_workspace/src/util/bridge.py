@@ -18,8 +18,9 @@ CMD_PORT = 10002
 virt_com_LiDAR = '/dev/ttyVIRT0'
 virt_com_Encoder = '/dev/ttyVIRT2'
 
-esp32_ip = '10.0.0.22'
+# esp32_ip = '10.0.0.22'
 # esp32_ip = '172.20.10.3'
+esp32_ip = '192.168.137.180'
 
 
 
