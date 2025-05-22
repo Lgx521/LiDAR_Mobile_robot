@@ -90,5 +90,19 @@ class RobotSerialControl:
 
 if __name__ == '__main__':
     rospy.init_node('robot_serial_control')
-    node = RobotSerialControl()
-    rospy.spin()
+
+    # Define the parameters of waiting
+    topic_to_wait_for = '/cmd_vel'
+    message_type = Twist
+    timeout = 30.0
+
+    try:
+        _ = rospy.wait_for_message(topic_to_wait_for, message_type, timeout=timeout)
+        node = RobotSerialControl()
+        rospy.spin()
+        
+    except rospy.ROSException as e:
+        rospy.logerr("Timeout or ROS error while waiting for message on %s: %s", topic_to_wait_for, e)
+        rospy.logerr("Node will not proceed with main logic.")
+
+
