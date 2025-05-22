@@ -2,17 +2,15 @@
 
     <node pkg="communication" type="communication.py" name="comm"/>
     <node pkg="vel_control_pkg" type="vel_control_wifi.py" name="vel_ctrl"/>
-    <node pkg="sensor_data_parse" type="sensor_data_parse.py" name="sensor"/>
-    <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="command_palatte"/>
-    <node pkg="hector_mapping" type="hector_mapping" name="map"/>
+    <node pkg="sensor_data_pkg" type="sensor_data_parse.py" name="sensor"/>
+    <!-- <node pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" name="command_palatte"/> -->
+    <!-- <node pkg="hector_mapping" type="hector_mapping" name="map"/> -->
 
-    <!--
     <node pkg="rviz"
           type="rviz"
           name="overall"
-          args="-d ../rviz/overall.rviz"
+          args="-d ./../rviz/overall.rviz"
           required="false" /> 
-    -->
 
 
 
