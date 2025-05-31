@@ -1,0 +1,32 @@
+<launch>
+
+  <!-- 假设你已经启动了 Hector SLAM 和你的机器人驱动 -->
+
+  <!-- 加载已保存的地图 -->
+  <!-- <arg name="map_file" default="$(find your_package)/maps/saved_map.yaml"/> -->
+    <arg name="map_file" default="~/home/maps/hector_test_map.yaml"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!-- 启动 move_base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <!-- 加载参数文件 -->
+    <!-- <rosparam file="$(find your_package)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find your_package)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find your_package)/config/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find your_package)/config/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find your_package)/config/base_local_planner_params.yaml" command="load" /> -->
+
+    <!-- 可选：指定全局和局部规划器插件 -->
+    <!-- <param name="base_global_planner" value="global_planner/GlobalPlanner"/> -->
+    <!-- <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/> -->
+
+    <!-- 确保这些 frame names 与你的系统一致 -->
+    <param name="global_costmap/global_frame" value="map"/>
+    <param name="global_costmap/robot_base_frame" value="base_link"/>
+    <param name="local_costmap/global_frame" value="odom"/> <!-- 注意这里通常是 odom -->
+    <param name="local_costmap/robot_base_frame" value="base_link"/>
+    <param name="base_local_planner/odom_frame_id" value="odom"/>
+  </node>
+
+</launch>

@@ -1,0 +1,72 @@
+<launch>
+
+  <!-- 参数定义 -->
+  <arg name="base_frame" default="base_link"/>
+  <arg name="odom_frame" default="odom"/> <!-- Hector SLAM可以发布map->odom -->
+  <arg name="map_frame" default="map"/>
+  <arg name="scan_topic" default="/scan"/> <!-- 你的激光雷达话题 -->
+  <arg name="laser_frame_id" default="base_laser"/> 
+
+
+  <!-- Hector Mapping 节点 -->
+  <node pkg="hector_mapping" type="hector_mapping" name="hector_mapping" output="screen">
+
+    <!-- Frame names -->
+    <param name="map_frame" value="$(arg map_frame)" />
+    <param name="base_frame" value="$(arg base_frame)" />
+    <param name="odom_frame" value="$(arg odom_frame)" />
+
+    <!-- Tf use -->
+    <!-- 如果你的 base_link -> laser_frame_id TF 是通过其他方式 (如 robot_state_publisher) 发布的，
+         并且这个 TF 包含激光雷达的实际安装姿态，那么将 use_tf_scan_transformation 设为 true。
+         如果激光雷达扫描数据本身就已经是相对于 base_link 的 (不常见)，或者你想让 Hector SLAM 忽略
+         从 TF 树获取的 laser_frame_id 到 base_frame 的变换，可以设为 false，但这通常不推荐。
+         通常保持 true，并确保 base_link -> laser_frame_id TF 正确发布。-->
+    <param name="use_tf_scan_transformation" value="true"/>
+    <param name="pub_map_odom_transform" value="true"/> <!-- 让Hector SLAM发布 map->odom 转换 -->
+
+    <!-- Map size / start point -->
+    <param name="map_resolution" value="0.050"/> <!-- 地图分辨率 (米/像素) -->
+    <param name="map_size" value="4096"/>       <!-- 地图大小 (像素) -->
+    <param name="map_start_x" value="0.5"/>
+    <param name="map_start_y" value="0.5" />
+    <param name="map_multi_res_levels" value="2" /> <!-- 多分辨率地图层级 -->
+
+    <!-- Map update parameters -->
+    <param name="update_factor_free" value="0.4"/>
+    <param name="update_factor_occupied" value="0.9" />
+    <param name="map_update_distance_thresh" value="0.05"/> <!-- 移动这么远才更新地图 -->
+    <param name="map_update_angle_thresh" value="0.05" />  <!-- 旋转这么多弧度才更新地图 -->
+    <param name="laser_z_min_value" value = "-1.0" />      <!-- 用于过滤3D激光雷达的Z轴数据 -->
+    <param name="laser_z_max_value" value = "1.0" />
+
+    <!-- Advertising config -->
+    <param name="advertise_map_service" value="true"/>
+    <param name="scan_subscriber_queue_size" value="5"/>
+    <param name="scan_topic" value="$(arg scan_topic)" /> <!-- 订阅的激光雷达话题 -->
+
+    <!-- Debug parameters -->
+    <!--
+    <param name="output_timing" value="false"/>
+    <param name="pub_drawings" value="true"/>
+    <param name="pub_debug_output" value="true"/>
+    -->
+    <param name="tf_map_scanmatch_transform_frame_name" value="$(arg base_frame)_scanmatcher" />
+  </node>
+
+  <!-- 可选: 静态 TF 发布器 (如果你的 URDF 没有定义 base_link -> laser_frame_id) -->
+  <!-- 确保这里的 "laser_link" 与你的激光雷达消息中的 frame_id 一致，并且与上面 laser_frame_id 参数一致 -->
+  <!-- 替换 x, y, z, yaw, pitch, roll 为你激光雷达相对于 base_link 的实际位姿 -->
+  <!-- 例如: 激光在 base_link 前方0.2米，向上0.1米，无旋转 -->
+  <!--
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser_broadcaster"
+        args="0.2 0 0.1 0 0 0 $(arg base_frame) $(arg laser_frame_id) 100" />
+  -->
+
+  <!-- 可选: RViz 可视化 -->
+  <!-- <node type="rviz" name="rviz" pkg="rviz" args="-d $(find hector_slam_launch)/rviz_cfg/mapping_demo.rviz" /> -->
+  <!-- 注意: 上面的 hector_slam_launch/rviz_cfg/mapping_demo.rviz 是 Hector SLAM 自带的示例 RViz 配置，
+       你需要确保 hector_slam_launch 包存在或者替换为自己的 RViz 配置文件路径。
+       如果找不到，可以先注释掉，手动启动 RViz 并配置。 -->
+
+</launch>
