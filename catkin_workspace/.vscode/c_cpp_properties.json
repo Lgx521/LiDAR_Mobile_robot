@@ -1,0 +1,25 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/opt/ros/noetic/include/**",
+        "/home/gansz/mobile_robot/catkin_workspace/src/communication/include/**",
+        "/home/gansz/mobile_robot/catkin_workspace/src/launch_the_car/include/**",
+        "/home/gansz/mobile_robot/catkin_workspace/src/ldlidar_sl_ros/include/**",
+        "/home/gansz/mobile_robot/catkin_workspace/src/sensor_data_pkg/include/**",
+        "/home/gansz/mobile_robot/catkin_workspace/src/vel_control_pkg/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
